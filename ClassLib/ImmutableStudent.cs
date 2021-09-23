@@ -1,29 +1,21 @@
 using System;
 
-namespace ClassLib {
-    public record ImmutableStudent()
+namespace ClassLib 
 {
-    int id{get; init;}
-    string givenName{get; init;}
-    string surname{get; init;}
-    status status{get; init;}
-    DateTime startDate{get; init;}
-    DateTime endDate{get; init;}
-    DateTime graduationDate{get; init;}
+    public record ImmutableStudent(int id, string givenName, string surname, DateTime startDate, DateTime endDate, DateTime graduationDate)
+    {
+    public status status
+    {
+        get => GetStatus();
+    }
 
-    // public ImmutableStudent(int id, string givenName, string surname, DateTime startDate, DateTime endDate, DateTime graduationDate)
-    //     {
-    //         this.id = id;
-    //         this.givenName = givenName;
-    //         this.surname = surname;
-    //         this.startDate = startDate;
-    //         this.endDate = endDate;
-    //         this.graduationDate = graduationDate;
-
-    //         if(startDate.Equals(DateTime.Now)) {status = status.New;}
-    //         else if (endDate == default) {status = status.Active;}
-    //         else if (endDate < graduationDate) {status = status.Dropout;}
-    //         else status = status.Graduate;
-    //     }
-}
+    private status GetStatus()
+    {
+        var now = DateTime.Now;
+        if (now < startDate.AddMonths(3) && now < endDate) return status.New;
+        if (startDate <  now && now < endDate) return status.Active;
+        if (endDate == graduationDate) return status.Graduate;
+        return status.Dropout;
+    }
+    }
 }
