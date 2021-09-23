@@ -9,7 +9,7 @@ namespace ClassLib
         int id {get; init;}
         string givenName;
         string surname;
-        status status {get; init;}
+        readonly status status; //{get; init;}
         DateTime startDate;
         DateTime endDate;
         DateTime graduationDate;
@@ -23,14 +23,15 @@ namespace ClassLib
             this.endDate = endDate;
             this.graduationDate = graduationDate;
 
-            if(startDate.Equals(DateTime.Now)) {status = status.New;}
+            if(startDate.AddMonths(1) > DateTime.Today) {status = status.New;}
             else if (endDate == default) {status = status.Active;}
             else if (endDate < graduationDate) {status = status.Dropout;}
             else status = status.Graduate;
         }
+
+        public status getstatus(){return status;}
         
-        public override string ToString() => $@"Id: {id}, Given Name: {givenName}, Surname: {surname}, Status: {status}, 
-                                             Start Date: {startDate}, End Date: {endDate}, Graduation Date: {graduationDate}";
+        public override string ToString() => (@$"Id: {id}, Given Name: {givenName}, Surname: {surname}, Status: {status}, Start Date: {startDate.ToString("d")}, End Date: {endDate.ToString("d")}, Graduation Date: {graduationDate.ToString("d")}");
     }
 
     public enum status 
